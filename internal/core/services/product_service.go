@@ -66,3 +66,24 @@ func (s *service) Delete(ctx context.Context, id string) error {
 func (s *service) List(ctx context.Context) ([]domain.Product, error) {
 	return s.repo.List(ctx)
 }
+
+func (s *service) ListWithFilters(ctx context.Context, filters ports.ProductFilters) (*ports.ProductListResult, error) {
+	s.logger.Info("listing products with filters",
+		"name", filters.Name,
+		"min_price", filters.MinPrice,
+		"max_price", filters.MaxPrice,
+		"sort_by", filters.SortBy,
+		"sort_order", filters.SortOrder,
+		"offset", filters.Offset,
+		"limit", filters.Limit,
+	)
+
+	result, err := s.repo.ListWithFilters(ctx, filters)
+	if err != nil {
+		s.logger.Error("failed to list products with filters", "error", err)
+		return nil, err
+	}
+
+	s.logger.Info("successfully listed products", "count", len(result.Products), "total", result.TotalItems)
+	return result, nil
+}

@@ -11,4 +11,5 @@ type ProductService interface {
 	Update(ctx context.Context, id, name, description string, price float64) (domain.Product, error)
 	Delete(ctx context.Context, id string) error
 	List(ctx context.Context) ([]domain.Product, error)
+	ListWithFilters(ctx context.Context, filters ProductFilters) (*ProductListResult, error)
 }
